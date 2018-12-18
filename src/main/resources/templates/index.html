@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Title</title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+<div th:replace="fragments/header :: header"/>
+<!-- <h1 th:text="'Bonjour ' + ${nom}">Hello CDA</h1>-->
+
+<main role="main">
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <div class="container">
+
+            <p> Voici les titres des films</p>
+
+            <!--
+                     <ul>
+                         <li th:each="film : ${films}">
+                             <a th:text="${film.title}" th:href="@{/film/detail/{id}(id=${film.getId()})}" >Le grand film</a>
+                         </li>
+                     </ul>
+   -->
+                       <p><a class="btn btn-primary btn-lg" th:href="'film/list/'" role="button">films &raquo;</a></p>
+                   </div>
+               </div>
+    <!--
+                         <div class="container">
+
+                    <div class="row">
+                        <div class="col-md-4" th:each="film : ${films}">
+                            <h2 th:text="${film.title}">titre</h2>
+                            <p th:text="${film.rating}"> </p>
+                            <p><a class="btn btn-secondary" th:href="'film/detail/'+${film.id}"  role="button">Détail De Film &raquo;</a></p>
+                        </div>
+
+                    </div>
+                -->
+
+            </div> <!-- /container -->
+        </div>
+    </div>
+</main>
+
+
+
+
+<div th:replace="fragments/footer :: footer"/>
+
+
+
+
+
+</body>
+</html>
