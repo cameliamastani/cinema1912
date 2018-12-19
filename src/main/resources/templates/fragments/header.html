@@ -10,8 +10,11 @@
               href="/static/css/jumbotron.css"/>
         <link rel="stylesheet" th:href="@{/css/cinema.css}"
               href="/static/css/cinema.css"/>
+        <title th:text="${title ?: 'Cinema'}"></title>
+
     </th:block>
 </head>
+
 <body>
 <div th:fragment="header">
 <!--<div th:fragment="header">
@@ -23,7 +26,7 @@
 </div>
 </div>
 -->
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <nav th:fragment="menu" class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="#">cinema</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

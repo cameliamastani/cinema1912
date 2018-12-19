@@ -25,7 +25,7 @@ public class PersonController {
     @GetMapping("/list")
     public String list(Model model){
         model.addAttribute("persons", personneDao.findAll());
-        return "person/detailacteur";
+        return "person/list";
     }
 
     @GetMapping("/detail/{id}")

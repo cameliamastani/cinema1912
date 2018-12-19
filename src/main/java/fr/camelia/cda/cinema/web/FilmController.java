@@ -4,12 +4,18 @@ import fr.camelia.cda.cinema.dao.FilmDao;
 import fr.camelia.cda.cinema.model.Film;
 import fr.camelia.cda.cinema.service.ImageManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -21,33 +27,44 @@ public class FilmController {
     @Autowired
     ImageManager imm;
 
+//    @Value("${cinema.img.path}")
+    String path = "static/images/affiches/";
+
     @GetMapping("/list")
     public String list(Model model){
         Iterable<Film> films = filmDao.findAll();
         model.addAttribute("films", films);
+        model.addAttribute("title","Liste des films : " + ((Collection<?>)films).size());
         return "film/list";
     }
 
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable("id")long id, Model model){
-        model.addAttribute("film", filmDao.findById(id).get());
+        Film film;
+        film = filmDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid request"));
+
+        model.addAttribute("film", film);
+        model.addAttribute("title","Film : " + film.getTitle());
         return "film/detail";
     }
 
     @GetMapping("/mod/{id}")
     public String mod(@PathVariable("id")long id, Model model){
         model.addAttribute("film", filmDao.findById(id).get());
+        model.addAttribute("title","modification");
         return "film/form";
     }
 
     @GetMapping("/add")
     public String add(Model model){
         model.addAttribute("film", new Film());
+        model.addAttribute("title","ajouter un film ");//dans fragment header partie hieder-css j'ai definir un cle  <title th:text="${title ?: 'Cinema'}"></title> et le cle c'est title ici je donne une valeur a ma cle
         return "film/form";
     }
 
     @PostMapping("/add")
-    public String submit(@RequestParam("poster")MultipartFile file, @ModelAttribute Film film){
+    public String submit(@RequestParam("photo")MultipartFile file, @ModelAttribute Film film){
         if(file.getContentType().equalsIgnoreCase("image/jpeg")){
             try {
                 imm.savePoster(film, file.getInputStream());
@@ -57,7 +74,21 @@ public class FilmController {
         }
         filmDao.save(film);
 
-        return "redirect:index";
+        return "redirect:/film/list";
+    }
+
+    @GetMapping(value = "/images/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public void afficheimages(HttpServletResponse response, @PathVariable("id")long id) throws IOException {
+
+        String imgPath = filmDao.findById(id).get().getImagePath();
+
+        ClassPathResource imgFile;
+
+        imgFile = new ClassPathResource(path + imgPath );
+
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(imgFile.getInputStream(), response.getOutputStream());
+
     }
 
 }

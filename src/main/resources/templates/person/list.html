@@ -7,8 +7,9 @@
 </head>
 <body>
 <table>
-    <tr th:each="person: ${persons}">
-        <td><span th:utext="${person.surname}"></span> <a href="#" th:href="@{'/person/detail/'+${person.id}}">detail</a> </td>
+
+    <tr th:each="person:${persons}">
+        <td><span th:utext="${person.surname}"></span> <a href="#" th:href="@{'/person/detailacteur/'+${person.id}}">detail</a> </td>
     </tr>
 </table>
 
